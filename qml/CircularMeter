@@ -1,0 +1,146 @@
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+
+Item {
+    id: root
+    width: 200
+    height: 200
+
+    /* -------- API -------- */
+    property real value: 50
+    property real minValue: 0
+    property real maxValue: 100
+    property string unit: "%"
+    property string title: "METER"
+
+    property color trackColor: "#2A2D34"
+    property color gradientStart: "#4ADE80"
+    property color gradientEnd: "#22D3EE"
+    property color textColor: "#FFFFFF"
+
+    /* -------- Animation -------- */
+    Behavior on value {
+        NumberAnimation {
+            duration: 600
+            easing.type: Easing.InOutCubic
+        }
+    }
+
+    /* -------- Gauge -------- */
+    Canvas {
+        id: canvas
+        anchors.fill: parent
+
+        onPaint: {
+            var ctx = getContext("2d")
+            ctx.clearRect(0, 0, width, height)
+
+            var cx = width / 2
+            var cy = height / 2
+            var radius = width / 2 - 10
+
+            var startAngle = Math.PI * 0.75
+            var endAngle   = Math.PI * 2.25
+
+            var range = maxValue - minValue
+            var percent = (value - minValue) / range
+            percent = Math.max(0, Math.min(1, percent))
+
+            var progressAngle = startAngle +
+                                percent * (endAngle - startAngle)
+
+            ctx.lineWidth = 10
+            ctx.lineCap = "round"
+
+            /* ---- Track ---- */
+            ctx.strokeStyle = trackColor
+            ctx.beginPath()
+            ctx.arc(cx, cy, radius, startAngle, endAngle)
+            ctx.stroke()
+
+            /* ---- Gradient Progress ---- */
+            var steps = 80
+            var angleStep = (progressAngle - startAngle) / steps
+
+            var r1 = gradientStart.r * 255
+            var g1 = gradientStart.g * 255
+            var b1 = gradientStart.b * 255
+
+            var r2 = gradientEnd.r * 255
+            var g2 = gradientEnd.g * 255
+            var b2 = gradientEnd.b * 255
+
+            for (var i = 0; i < steps; i++) {
+                var a1 = startAngle + i * angleStep
+                var a2 = a1 + angleStep
+                var t = i / steps
+
+                var r = Math.floor(r1 + t * (r2 - r1))
+                var g = Math.floor(g1 + t * (g2 - g1))
+                var b = Math.floor(b1 + t * (b2 - b1))
+
+                ctx.strokeStyle = "rgb(" + r + "," + g + "," + b + ")"
+                ctx.beginPath()
+                ctx.arc(cx, cy, radius, a1, a2)
+                ctx.stroke()
+            }
+        }
+    }
+
+    /* -------- Labels -------- */
+    Column {
+        anchors.centerIn: parent
+        spacing: 4
+
+        // Label {
+        //     text: title
+        //     font.pixelSize: 12
+        //     color: "#A1A1AA"
+        //     horizontalAlignment: Text.AlignHCenter
+        // }
+        Item {
+            width: parent.width
+            height: 20
+
+            /* ---- Glow Layer 1 ---- */
+            Label {
+                anchors.centerIn: parent
+                text: title
+                font.pixelSize: 14
+                font.bold: true
+                color: "#C7C7C7"
+                opacity: 0.25
+            }
+
+            /* ---- Glow Layer 2 ---- */
+            Label {
+                anchors.centerIn: parent
+                text: title
+                font.pixelSize: 14
+                font.bold: true
+                color: "#E5E5E5"
+                opacity: 0.18
+            }
+
+            /* ---- Main Text ---- */
+            Label {
+                anchors.centerIn: parent
+                text: title
+                font.pixelSize: 14
+                font.bold: true
+                color: "#F1F1F1"
+            }
+        }
+
+
+        Label {
+            text: Math.round(value) + " " + unit
+            font.pixelSize: 24
+            font.bold: true
+            color: textColor
+            horizontalAlignment: Text.AlignHCenter
+        }
+    }
+
+    onValueChanged: canvas.requestPaint()
+}
