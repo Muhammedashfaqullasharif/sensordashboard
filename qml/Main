@@ -1,0 +1,400 @@
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Effects
+import QtQuick.Layouts
+
+Window {
+    id: root
+    width: 1000
+    height: 580
+    visible: true
+
+    flags: Qt.FramelessWindowHint
+    color: "transparent"
+
+    Rectangle{
+        id: background
+        anchors.fill: parent
+
+        visible: true
+        color: "#1e1e1e"
+        radius: 14
+
+        border.color: Qt.rgba(1,1,1,0.15)
+
+       Rectangle{
+               id: titlebar
+               width: parent.width
+               height: 35
+
+               color: "#2a2a2a"
+               border.color: Qt.rgba(1,1,1,0.15)
+               topLeftRadius: 14
+               topRightRadius: 14
+
+               MouseArea{
+                       anchors.fill: parent
+                       onPressed: {
+                               if(mouse.button === Qt.LeftButton)
+                               {
+                                       root.startSystemMove()
+                               }
+                       }
+               }
+
+               Row{
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: 10
+
+                anchors.rightMargin: 12
+
+                Rectangle{
+                        id: quit
+                        width: 14
+                        height: 14
+                        radius: 7
+                        color:"#ff5f57"
+
+                        MouseArea{
+                                anchors.fill: parent
+                                onClicked: Qt.quit()
+
+                        }
+                }
+                Rectangle{
+                        id: max
+                        width: 14
+                        height: 14
+                        radius: 7
+                        color:"#ffbd2e"
+
+                        MouseArea{
+                                anchors.fill: parent
+                                onClicked: root.showMinimized()
+                        }
+                }
+                Rectangle{
+                        id: min
+                        width: 14
+                        height: 14
+                        radius: 7
+                        color:"#28c840"
+
+                        MouseArea{
+                                anchors.fill: parent
+                                onClicked: root.showMaximized()
+                        }
+                }
+
+               }
+       }
+
+       GridLayout{
+               id: layout1
+               anchors.top: titlebar.bottom
+               anchors.bottom: background.bottom
+               anchors.left: background.left
+               anchors.right: background.right
+               anchors.margins: 20
+               anchors.leftMargin: 20
+               anchors.rightMargin: 20
+               anchors.topMargin: 20
+               anchors.bottomMargin: 20
+
+               columns: 3
+               rowSpacing: 25
+               columnSpacing: 25
+
+                        Rectangle{
+                                id: humidity
+
+                                Layout.fillWidth: parent
+                                Layout.fillHeight: parent
+                                color: "#181A1F"
+                                border.color: Qt.rgba(1,1,1,0.22)
+                                radius: 8
+                                clip: true
+
+                                Rectangle{
+                                        anchors.fill: parent
+                                        color:"transparent"
+                                        layer.enabled: true
+                                        layer.effect: MultiEffect{
+                                                blurEnabled: true
+                                                blur: 0.8
+
+                                        }
+
+                                        Rectangle{
+                                                anchors.fill: parent
+                                                color: "transparent"
+                                                gradient: Gradient{
+
+                                                        GradientStop{position: 0; color: Qt.rgba(1,1,1,0.18)}
+                                                        GradientStop{position: 1; color: Qt.rgba(1,1,1,0.05)}
+
+                                                }
+                                        }
+                                }
+
+                                Text{
+                                        anchors.top: parent.top
+                                        anchors.left: parent.left
+                                        anchors.margins: 14
+
+                                        text:qsTr("HUMIDITY")
+                                        color: "#2FA84F"
+
+                                        font.bold: true
+                                        font.pointSize: 12
+
+                                }
+
+                                Circularmeter{
+                                        anchors.centerIn: parent
+
+                                        title: "HUMIDITY"
+                                        value: sensorModel.humidity
+                                        unit: "%"
+                                        gradientStart:"#4ADE80"
+                                        gradientEnd: "#22D3EE"
+                                }
+
+                        }
+
+                        Rectangle{
+                                id: temperature
+
+                                Layout.fillWidth: parent
+                                Layout.fillHeight: parent
+                                color: "#181A1F"
+                                border.color: Qt.rgba(1,1,1,0.22)
+                                radius: 8
+                                clip: true
+
+                                Rectangle{
+                                        anchors.fill: parent
+                                        color:"transparent"
+                                        layer.enabled: true
+                                        layer.effect: MultiEffect{
+                                                blurEnabled: true
+                                                blur: 0.8
+
+                                        }
+
+                                        Rectangle{
+                                                anchors.fill: parent
+                                                color: "transparent"
+                                                gradient: Gradient{
+
+                                                        GradientStop{position: 0; color: Qt.rgba(1,1,1,0.18)}
+                                                        GradientStop{position: 1; color: Qt.rgba(1,1,1,0.05)}
+
+                                                }
+                                        }
+                                }
+
+                                Text{
+                                        anchors.top: parent.top
+                                        anchors.left: parent.left
+                                        anchors.margins: 14
+
+                                        text:qsTr("TEMPERATURE")
+                                        color: "#2FA84F"
+
+                                        font.bold: true
+                                        font.pointSize: 12
+
+                                }
+                                Circularmeter{
+                                        anchors.centerIn: parent
+
+                                        title: "TEMPERATURE"
+                                        value: sensorModel.temperature
+                                        unit: "%"
+                                        gradientStart:"#FB7185"
+                                        gradientEnd: "#F97316"
+                                }
+
+                        }
+                        Rectangle{
+                                id: pressure
+
+                                Layout.fillWidth: parent
+                                Layout.fillHeight: parent
+                                color: "#181A1F"
+                                border.color: Qt.rgba(1,1,1,0.22)
+                                radius: 8
+                                clip: true
+
+                                Rectangle{
+                                        anchors.fill: parent
+                                        color:"transparent"
+                                        layer.enabled: true
+                                        layer.effect: MultiEffect{
+                                                blurEnabled: true
+                                                blur: 0.8
+
+                                        }
+
+                                        Rectangle{
+                                                anchors.fill: parent
+                                                color: "transparent"
+                                                gradient: Gradient{
+
+                                                        GradientStop{position: 0; color: Qt.rgba(1,1,1,0.18)}
+                                                        GradientStop{position: 1; color: Qt.rgba(1,1,1,0.05)}
+
+                                                }
+                                        }
+                                }
+
+                                Text{
+                                        anchors.top: parent.top
+                                        anchors.left: parent.left
+                                        anchors.margins: 14
+
+                                        text:qsTr("PRESSURE")
+                                        color: "#2FA84F"
+
+                                        font.bold: true
+                                        font.pointSize: 12
+
+                                }
+                                Circularmeter{
+                                        anchors.centerIn: parent
+
+                                        title: "PRESSURE"
+                                        value: sensorModel.pressure
+                                        unit: "%"
+                                        gradientStart:"#60A5FA"
+                                        gradientEnd: "#818CF8"
+                                }
+
+                        }
+
+
+                GridLayout{
+                        id: layout2
+                         Layout.columnSpan: 3
+                         columns: 2
+
+                         columnSpacing: 15
+
+                         Rectangle{
+                                 id: uv
+
+                                 Layout.fillWidth: parent
+                                 Layout.fillHeight: parent
+                                 color: "#181A1F"
+                                 border.color: Qt.rgba(1,1,1,0.22)
+                                 radius: 8
+                                 clip: true
+
+                                 Rectangle{
+                                         anchors.fill: parent
+                                         color:"transparent"
+                                         layer.enabled: true
+                                         layer.effect: MultiEffect{
+                                                 blurEnabled: true
+                                                 blur: 0.8
+
+                                         }
+
+                                         Rectangle{
+                                                 anchors.fill: parent
+                                                 color: "transparent"
+                                                 gradient: Gradient{
+
+                                                         GradientStop{position: 0; color: Qt.rgba(1,1,1,0.18)}
+                                                         GradientStop{position: 1; color: Qt.rgba(1,1,1,0.05)}
+
+                                                 }
+                                         }
+                                 }
+
+                                 Text{
+                                         anchors.top: parent.top
+                                         anchors.left: parent.left
+                                         anchors.margins: 14
+
+                                         text:qsTr("ULTRA VIOLET RADIATION")
+                                         color: "#2FA84F"
+
+                                         font.bold: true
+                                         font.pointSize: 12
+
+                                 }
+                                 UVgraph {
+                                     // anchors.centerIn: parent
+                                     // width: parent.width - 30
+                                     // height: 100
+
+                                         anchors.fill: parent
+                                         anchors.margins: 12
+                                         level: sensorModel.uv
+                                 }
+
+
+                         }
+
+                         Rectangle{
+                                 id: aqi
+
+                                 Layout.fillWidth: parent
+                                 Layout.fillHeight: parent
+                                 color: "#181A1F"
+                                 border.color: Qt.rgba(1,1,1,0.22)
+                                 radius: 8
+                                 clip: true
+
+                                 Rectangle{
+                                         anchors.fill: parent
+                                         color:"transparent"
+                                         layer.enabled: true
+                                         layer.effect: MultiEffect{
+                                                 blurEnabled: true
+                                                 blur: 0.8
+
+                                         }
+
+                                         Rectangle{
+                                                 anchors.fill: parent
+                                                 color: "transparent"
+                                                 gradient: Gradient{
+
+                                                         GradientStop{position: 0; color: Qt.rgba(1,1,1,0.18)}
+                                                         GradientStop{position: 1; color: Qt.rgba(1,1,1,0.05)}
+
+                                                 }
+                                         }
+                                 }
+
+                                 Text{
+                                         anchors.top: parent.top
+                                         anchors.left: parent.left
+                                         anchors.margins: 14
+
+                                         text:qsTr("AIR QUALITY INDEX")
+                                         color: "#2FA84F"
+
+                                         font.bold: true
+                                         font.pointSize: 12
+
+                                 }
+                                 Aqigraph{
+                                         anchors.fill: parent
+                                         anchors.margins: 12
+                                         value: sensorModel.aqi
+                                 }
+
+                         }
+
+                }
+
+       }
+}
+
+}
+
